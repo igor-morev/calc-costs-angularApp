@@ -1,0 +1,50 @@
+<div class="row heading-panel">
+  <div class="col-sm-9">
+    <h2>{{CATEGORY.name}}</h2>
+    <h3>Месячный бюджет <span>{{CATEGORY.CURRENT_VALUE = getTotal()}} из {{CATEGORY.MAX_VALUE}} руб.</span>
+    </h3>
+    <div class="t-L"><a href="/" class="btn btn-default">Вернуться к списку категорий <span class="glyphicon glyphicon-arrow-left"></span></a></div>
+  </div>
+  <div class="col-sm-3">
+    <div class="t-R"><a ui-sref="costs-plan" class="btn btn-default">План бюджета <span class="glyphicon glyphicon-cog"></span></a></div>
+  </div>
+</div>
+<div ng-if="results.length == 0">Для данной категории расходов нет.</div>
+<div class="categories row">
+	<div class="col-sm-3 item" ng-repeat="resource in resources | filter: {catId : categoryId} as results">
+	  <div class="inner">
+	    <h4>{{resource.name}}</h4>
+	    <p>{{resource.PRICE}} руб.</p>
+	    <a class="btn btn-primary m-b-1">Редактировать</a>
+	    <button ng-click="deleteResource(resource)" class="btn btn-danger">Удалить</a>
+	  </div>
+	</div>
+</div>
+<div class="t-C m-b-5">
+  <button href="#" class="btn btn-success" data-toggle="modal" data-target="#edit-modal">Добавить ресурс <span class="glyphicon glyphicon-plus"></span></button>
+</div>
+
+<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Добавить новый ресурс</h4>
+      </div>
+      <div class="modal-body">
+        <form ng-submit="addResource()">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Название" ng-model="name" required>
+          </div>
+          <div class="form-group">
+            <input type="number" class="form-control" placeholder="100 руб." ng-model="PRICE" required>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Отправить</button>
+          </div>
+          {{defaultMessage}}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

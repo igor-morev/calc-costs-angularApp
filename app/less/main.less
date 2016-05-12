@@ -1,0 +1,81 @@
+@import "../vendor/bootstrap/css/bootstrap.min.css";
+@import "../vendor/font-awesome/css/font-awesome.min.css";
+
+@import "mixins.less";
+@import "colors.less";
+@import "fonts.less";
+
+
+body {
+	padding: 0;
+	margin: 0;
+	background: @white;
+	.f-N;
+	.ffbasetext;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+	margin-top: 0;
+	.ffheadings;
+	.f-UC;
+	margin-bottom: .7em;
+	
+}
+
+a, input, button {
+	&:focus {
+		outline: none !important;
+	}
+}
+
+a {
+	color: @linkColor;
+	&:hover {
+		color: @linkColor;
+	}
+}
+
+p {
+	margin-bottom: 2rem;
+}
+ul {
+	list-style-type: none;
+	padding-left: 10px;
+}
+
+main {
+	padding-top: 50px;
+}
+
+
+.heading-panel {
+	margin-bottom: @smallOffset;
+	h3 {
+		span {
+			.f-M;
+			.ffbasetext;
+			text-transform: none;
+		}
+	}
+}
+
+.categories {
+	.item {
+		margin-bottom: @smallOffset;
+	}
+	.inner {
+		border: 10px solid #999;
+		padding: 40px 40px 20px;
+		.t-C;
+	}
+}
+
+.default-cost-form {
+	button[type='submit'] {
+		margin-top: 25px;
+	}
+}
+
+
+

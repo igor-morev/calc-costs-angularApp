@@ -1,0 +1,68 @@
+doctype html
+html(lang="en")
+  include ./inc/head.jade
+  body
+    main
+      .container
+        .row.heading-panel
+          .col-sm-9
+            h2 Категории
+            h3 
+              | Месячный бюджет (
+              span.js-current 19640
+              |  / 
+              span.js-max-value 30000
+              | )
+          .cols-sm-3
+            .t-R
+              a(href="").btn.btn-default План бюджета 
+                span.glyphicon.glyphicon-cog
+        .row.categories
+          .col-sm-3
+            .inner
+              h4 Питание
+              p
+                | (
+                span.js-current 2040
+                |  / 
+                span.js-max-value 8000
+                | )
+              +link("btn btn-primary", "Подробнее")
+          .col-sm-3
+            .inner
+              h4 Транспорт
+              p
+                | (
+                span.js-current 1300
+                |  / 
+                span.js-max-value 3000
+                | )
+              +link("btn btn-primary", "Подробнее")
+          .col-sm-3
+            .inner
+              h4 Проживание
+              p
+                | (
+                span.js-current 15000
+                |  / 
+                span.js-max-value 15000
+                | )
+              +link("btn btn-primary", "Подробнее")
+          .col-sm-3
+            .inner
+              h4 Развлечения
+              p
+                | (
+                span.js-current 1300
+                |  / 
+                span.js-max-value 4000
+                | )
+              +link("btn btn-primary", "Подробнее")
+        .t-C
+          a(href="#").btn.btn-success Добавить категорию 
+            span.glyphicon.glyphicon-plus
+    script(src='/vendor/jquery/jquery-1.11.2.min.js')
+    script(src='/vendor/bootstrap/js/bootstrap.min.js')
+    script(src='/vendor/angular/angular.min.js')
+    script(src='/vendor/angular/angular-ui-router.js')
+    script(src='/js/app.module.js')

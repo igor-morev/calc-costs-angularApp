@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="costs">
+  <head>
+    <title>SPA - для учёта расходов</title>
+    <meta charset="utf-8">
+    <link href="css/main.css" rel="stylesheet">
+    <script src="vendor/modernizr/modernizr.js"></script>
+  </head>
+  <body>
+    <main>
+      <div class="container">
+        <div ui-view></div>
+      </div>
+    </main>
+    <footer>
+      <script src="vendor/jquery/jquery-1.11.2.min.js"></script>
+      <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+      <script src="/vendor/angular/angular.min.js"></script>
+      <script src="/vendor/angular/angular-ui-router.js"></script>
+
+      <script src="/js/app.module.js"></script>
+
+      <script src="js/controllers/default.controller.js"></script>
+      <script src="js/controllers/categories.controller.js"></script>
+      <script src="js/controllers/categoryDetail.controller.js"></script>
+      <script src="js/controllers/plan.controller.js"></script>
+
+      <script src="js/services/categories.service.js"></script>
+      <script src="js/services/resources.service.js"></script>
+    </footer>
+  </body>
+</html>
