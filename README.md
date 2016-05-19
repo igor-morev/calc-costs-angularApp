@@ -1,6 +1,6 @@
 # Single Page Application для расчёта расходов на Angular 1.5.5
 
-Использовал следующие технологии: Angular 1.5, Bootstrap 3, Less, jade
+Использовал следующие технологии: Angular 1.5.5, Bootstrap 3, Less, jade
 
 Текущее приложение умеет: 
 
