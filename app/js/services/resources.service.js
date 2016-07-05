@@ -1,43 +1,31 @@
 angular
     .module('costs')
-    .service('resources', resources);
+    .service('Resources', Resources);
 
 
-function resources() {
-	var obj = {
-		resources: [
-			{
-				"id": 1,
-				"catId": 1,
-				"name": "Сникерс",
-				"PRICE": 40,
-			},
-			{
-				"id": 2,
-				"catId": 1,
-				"name": "Продукты",
-				"PRICE": 2000,
-			},
-			{
-				"id": 3,
-				"catId": 1,
-				"name": "Сок",
-				"PRICE": 1300,
-			},
-			{
-				"id": 4,
-				"catId": 4,
-				"name": "Бар",
-				"PRICE": 1500,
-			},
-			{
-				"id": 5,
-				"catId": 4,
-				"name": "Кино",
-				"PRICE": 500,
-			}
-		]
+function Resources($http, $stateParams) {
+	var vm = this;
+
+	vm.getResources = function() {
+		return $http({
+			method: "GET",
+			url: "http://s2.localhost/api/resources/" + $stateParams.categoryId + "/" 
+		})
 	}
 
-	return obj;
+	vm.addResource = function(resource) {
+		return $http({
+			method: "POST",
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			data: resource,
+			url: "http://s2.localhost/api/resources" 
+		})
+	}
+
+	vm.deleteResource = function(resId) {
+		return $http({
+			method: "OPTIONS",
+			url: "http://s2.localhost/api/resources/" + resId
+		})
+	}
 }

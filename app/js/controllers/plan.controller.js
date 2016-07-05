@@ -2,71 +2,122 @@ angular
     .module('costs')
     .controller('planController', planController);
 
-function planController($scope, categories) {
-	$scope.categories = categories[0].categories;
-	$scope.defaultCosts = categories[1].defaultCosts;
+function planController(Categories) {
+	var vm = this;
 
-	$scope.showDefaultMessage = function(message) {
-		$scope.defaultMessage = message;
+	vm._Categories = Categories;
+
+	vm.categories = [];
+	vm.defaultCosts = [{
+		id: "",
+		CURRENT_VALUE: 0,
+		DEFAULT_VALUE: 0
+	}];
+
+	getCategories();
+
+	function getCategories() {
+		vm._Categories.getCategories()
+		.then(
+			successData, 
+			errorData
+		);
+
+		function successData(response) {
+			vm.categories = response.data;
+		}
+
+		function errorData(response) {
+			console.log(response);
+		}
 	}
 
-	$scope.showCategoriesMessage = function(message) {
-		$scope.categoriesMessage = message;
+	getDefault();
+
+	function getDefault() {
+		vm._Categories.getDefault()
+			.then(
+				successData, 
+				errorData
+			)
+
+		function successData(response) {
+			vm.defaultCosts = response.data;
+		}
+
+		function errorData(response) {
+			console.log(response);
+		}
 	}
 
-	$scope.catList = { MAX_VALUES: [] };
 
-	$scope.setCategoriesValue = function() {
-		$scope.categories.forEach(function(item, i) {
-			$scope.catList.MAX_VALUES.push(item.MAX_VALUE);
-		});
+	vm.showDefaultMessage = function(message) {
+		vm.defaultMessage = message;
 	}
 
-	$scope.setCategoriesValue();
+	vm.showCategoriesMessage = function(message) {
+		vm.categoriesMessage = message;
+	}
 
-	$scope.DEFAULT_VALUE = $scope.defaultCosts[0].DEFAULT_VALUE;
-
-	$scope.setDefaultCost = function() {
+	function sumCategoriesMax() {
 		var sum = 0;
 
-		$scope.categories.forEach(function(item, i) {
+		vm.categories.forEach(function(item, i) {
+			sum += +item.MAX_VALUE;
+		});
+
+		return sum;
+	}
+
+	vm.setDefaultCost = function() {
+		var sum = 0;
+
+		vm.categories.forEach(function(item, i) {
 			sum += item.MAX_VALUE;
 		});
 
-		if ($scope.DEFAULT_VALUE == $scope.defaultCosts[0].DEFAULT_VALUE) {
-			$scope.showDefaultMessage("Ваш бюджет не изменился.");
+		if (vm.DEFAULT_VALUE == vm.defaultCosts[0].DEFAULT_VALUE) {
+			vm.showDefaultMessage("Ваш бюджет не изменился.");
 			return;
 		}
 
-		if ($scope.DEFAULT_VALUE < sum) {
-			$scope.showDefaultMessage("Уменьшите бюджет для ваших категорий.");
+		if (vm.DEFAULT_VALUE < sum) {
+			vm.showDefaultMessage("Уменьшите бюджет для ваших категорий.");
 			return;		
 		}
 
-		$scope.defaultCosts[0].DEFAULT_VALUE = $scope.DEFAULT_VALUE;
-		$scope.showDefaultMessage("Бюджет успешно сохранён.");
+		vm.defaultCosts[0].DEFAULT_VALUE = vm.DEFAULT_VALUE;
+		vm.showDefaultMessage("Бюджет успешно сохранён.");
 	}
 
+	vm.setCategoryCost = function(category) {
+		if (sumCategoriesMax() > vm.defaultCosts[0].DEFAULT_VALUE) {
+			vm.showCategoriesMessage("Вы превысили максимальный бюджет, откорректируйте введённые значения и попробуйте сохранить ещё раз.");
+			return;
+		}
 
-	$scope.setCategoriesCost = function() {
-		var sum = 0,
-			flag = false;
+		var data = {
+			id: category.id,
+			MAX_VALUE: category.MAX_VALUE
+		}
 
-		$scope.categories.forEach(function(item, i) {
-			sum += $scope.catList.MAX_VALUES[i];
+		vm._Categories.updateMaxValue(data)
+			.then(
+				successData,
+				errorData
+			);
 
-			if (sum > $scope.defaultCosts[0].DEFAULT_VALUE) {
-				$scope.showCategoriesMessage("Вы превысили максимальный бюджет, откорректируйте введённые значения и попробуйте сохранить ещё раз.");
-				flag = false;
-				return;
+		function successData(response) {
+			if (response.data) {
+				console.log(response);
+				vm.showCategoriesMessage("Бюджет для ваших категорий установлен.");
+				getCategories();
 			}
-			
-			item.MAX_VALUE = $scope.catList.MAX_VALUES[i];
-			flag = true;
-			$scope.showCategoriesMessage("Бюджет для ваших категорий установлен.");
-		});
+		}
 
-		if (flag) $scope.defaultCosts[0].CURRENT_VALUE = sum;
+		function errorData(response) {
+			console.log(response);
+		}
 
 	}
 }

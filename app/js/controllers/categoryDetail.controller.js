@@ -20,27 +20,81 @@ angular
     .module('costs')
     .controller('categoryDetailController', categoryDetailController);
 
-function categoryDetailController($scope, $stateParams, resources, categories) {
-	$scope.resources = resources.resources;
-	$scope.CATEGORY = categories[0].categories[$stateParams.categoryId - 1];
-	$scope.categoryId = $stateParams.categoryId;
+function categoryDetailController($stateParams, Resources, Categories) {
 
-	$scope.showDefaultMessage = function(message) {
-		$scope.defaultMessage = message;
+	var vm = this;
+	vm._Resources = Resources;
+	vm._Categories = Categories;
+	vm.categoryId = $stateParams.categoryId;
+	vm.resources = [];
+
+	getResources();
+
+	function getResources() {
+		vm._Resources.getResources()
+		.then(
+			successData,
+			errorData
+		);
+
+		function successData(response) {
+			vm.resources = response.data;
+		}
+
+		function errorData(response) {
+			console.log(response);
+		}
 	}
 
-	$scope.deleteResource = function(resource, $index) {
-		var index = $scope.resources.indexOf(resource);
-		resources.resources.splice(index, 1);
+	getCategoryIndex();
+
+	function getCategoryIndex() {
+		vm._Categories.getCategories()
+		.then(
+			successData, 
+			errorData
+		);
+
+		function successData(response) {
+			vm.CATEGORY = response.data[$stateParams.categoryId - 1];
+		}
+
+		function errorData(response) {
+			console.log(response);
+		}
 	}
 
-	$scope.getTotal = function() {
+
+	vm.showDefaultMessage = function(message) {
+		vm.defaultMessage = message;
+	}
+
+	vm.deleteResource = function(resource) {
+		var index = vm.resources.indexOf(resource);
+
+		vm._Resources.deleteResource(resource.resId)
+			.then(
+				successData,
+				errorData
+			);
+
+		function successData(response) {
+			console.log(response);
+			vm.resources.splice(index, 1);
+		}
+
+		function errorData(response) {
+			console.log(response);
+		}
+	}
+
+	vm.getTotal = function() {
 		var sum = 0;
-		for (var i = 0; i < resources.resources.length; i++) {
-			var item = resources.resources[i];
+		for (var i = 0; i < vm.resources.length; i++) {
+			var item = vm.resources[i];
 
-			if (item.catId == $scope.categoryId) {
-				sum += item.PRICE;
+			if (item.catId == vm.categoryId) {
+				sum += +item.PRICE;
 			}
 			continue;
 
@@ -48,23 +102,39 @@ function categoryDetailController($scope, $stateParams, resources, categories) {
 		return sum;
 	}
 
-	$scope.addResource = function() {
-		var remain = $scope.CATEGORY.MAX_VALUE - $scope.getTotal(),
-			newSum = $scope.getTotal() + $scope.PRICE;
-		if (newSum > $scope.CATEGORY.MAX_VALUE) {
-			$scope.showDefaultMessage("Вашего бюджета недостаточно. Вы можете потратить не более "+ remain + " руб.");
+	vm.addResource = function() {
+		var remain = vm.CATEGORY.MAX_VALUE - vm.getTotal(),
+			newSum = vm.getTotal() + vm.PRICE;
+		if (newSum > vm.CATEGORY.MAX_VALUE) {
+			vm.showDefaultMessage("Вашего бюджета недостаточно. Вы можете потратить не более "+ remain + " руб.");
 			return;
 		}
-		resources.resources.push({
-			id: resources.resources.length + 1,
-			catId: $stateParams.categoryId,
-			name: $scope.name,
-			PRICE: $scope.PRICE
-		});
-		$scope.showDefaultMessage($scope.name +" успешно добавлен.");
-		$scope.name = "";
-		$scope.PRICE = "";
-	}
 
+		var data = {
+			catId: vm.categoryId,
+			name: vm.name,
+			PRICE: vm.PRICE
+		}
+
+		vm._Resources.addResource(data)
+			.then(
+				successData,
+				errorData
+			);
+
+		function successData(response) {
+			if (response.data) {
+				getResources();
+			}
+		}
+
+		function errorData(response) {
+			console.log(response);
+		}
+
+		vm.showDefaultMessage(vm.name +" успешно добавлен.");
+		vm.name = "";
+		vm.PRICE = "";
+	}
 
 }

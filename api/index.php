@@ -2,80 +2,134 @@
 	require 'Macaw.php';
 	use \NoahBuscher\Macaw\Macaw;
 
-	class Categories {
-		public static function getCategories($mysqli) {
-			$query = "SELECT * FROM categories ORDER BY id ASC";
+	header('Access-Control-Allow-Origin: http://localhost:8888');
+	header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+	header('Access-Control-Allow-Headers: Accept, X-Requested-With, Content-Type');
+	header('Access-Control-Allow-Credentials: true');
+	header('HTTP/1.1 200 OK', true);
 
-			if ($result = $mysqli->query($query)) {
-			    $arResult = array();
-
-			    while ($row = $result->fetch_assoc()) {
-			        array_push($arResult, $row);
-			    }
-
-			    return json_encode($arResult, JSON_UNESCAPED_UNICODE);
-
-			    $result->free_result();
-			}
-
-			$mysqli->close();
-		}
-	}
-
-	class Resources {
-		public static function getResources($mysqli) {
-			$query = "SELECT * FROM resources ORDER BY resId ASC";
-
-			if ($result = $mysqli->query($query)) {
-			    $arResult = array();
-
-			    while ($row = $result->fetch_assoc()) {
-			        array_push($arResult, $row);
-			    }
-
-			    return json_encode($arResult, JSON_UNESCAPED_UNICODE);
-
-			    $result->free_result();
-			}
-
-			$mysqli->close();
-		}
-	}
-
-	class DefaultCosts {
-		public static function getDefault($mysqli) {
-			$query = "SELECT * FROM defaultcosts ORDER BY id ASC";
-
-			if ($result = $mysqli->query($query)) {
-			    $arResult = array();
-
-			    while ($row = $result->fetch_assoc()) {
-			        array_push($arResult, $row);
-			    }
-
-			    return json_encode($arResult, JSON_UNESCAPED_UNICODE);
-
-			    $result->free_result();
-			}
-
-			$mysqli->close();
-		}
-	}
 
 	Macaw::get('/categories', function() {
 		require_once('db.php');
-		echo Categories::getCategories($mysqli);
+
+		$query = "SELECT * FROM categories ORDER BY id ASC";
+
+		if ($result = $mysqli->query($query)) {
+		    $arResult = array();
+
+		    while ($row = $result->fetch_assoc()) {
+		        array_push($arResult, $row);
+		    }
+
+		    echo json_encode($arResult, JSON_UNESCAPED_UNICODE);
+
+		    $result->free_result();
+		}
 	});
 
-	Macaw::get('/resources', function() {
+	Macaw::get('/resources/(:any)/', function($catId) {
 		require_once('db.php');
-		echo Resources::getResources($mysqli);
+
+		$query = "SELECT * FROM resources WHERE catId = '$catId' ORDER BY resId ASC";
+
+		if ($result = $mysqli->query($query)) {
+		    $arResult = array();
+
+		    while ($row = $result->fetch_assoc()) {
+		        array_push($arResult, $row);
+		    }
+
+		    echo json_encode($arResult, JSON_UNESCAPED_UNICODE);
+
+		    $result->free_result();
+		}
+
+		$mysqli->close();
+	});
+
+	Macaw::post('/categories', function() {
+		require_once('db.php');
+
+		header("Content-type: text/txt; charset=UTF-8");
+		$data = json_decode(file_get_contents("php://input"));
+
+		$id = $data->id;
+		$MAX_VALUE = $data->MAX_VALUE;
+
+		$query = "UPDATE categories 
+			SET MAX_VALUE = '$MAX_VALUE' WHERE id='$id'";
+
+			$result = $mysqli->query($query);
+
+			if (!$result) {
+				die($mysqli->error);
+			}
+
+			echo json_encode($data, JSON_UNESCAPED_UNICODE);
+
+			$mysqli->close();
 	});
 
 
-	Macaw::get('/options', function() {
+	Macaw::options('/resources/(:any)', function($resId) {
 		require_once('db.php');
-		echo DefaultCosts::getDefault($mysqli);
+
+		$query = "DELETE FROM resources WHERE resId = '$resId'";
+
+		if ($result = $mysqli->query($query)) {
+			echo "query is ok";
+		} else {
+			echo "error";
+		}
+
+		$mysqli->close();
+	});
+
+	Macaw::post('/resources', function() {
+		require_once('db.php');
+		header("Content-type: text/txt; charset=UTF-8");
+
+		$data = json_decode(file_get_contents("php://input"));
+
+		$catId = $data->catId;
+		$name = $data->name;
+		$PRICE = $data->PRICE;
+		
+
+		$query = "INSERT INTO resources (catId, name, PRICE)
+		VALUES ('$catId', '$name', '$PRICE')";
+
+
+		if ($result = $mysqli->query($query)) {
+		    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+		} else {
+			echo "error";
+		}
+
+		$mysqli->close();
+	});
+
+
+	Macaw::get('/default', function() {
+		require_once('db.php');
+
+		$query = "SELECT * FROM defaultcosts ORDER BY id ASC";
+
+		if ($result = $mysqli->query($query)) {
+		    $arResult = array();
+
+		    while ($row = $result->fetch_assoc()) {
+		        array_push($arResult, $row);
+		    }
+
+		    echo json_encode($arResult, JSON_UNESCAPED_UNICODE);
+
+		    $result->free_result();
+		} else {
+			echo "error";
+		}
+
+		$mysqli->close();
 	});
 
 

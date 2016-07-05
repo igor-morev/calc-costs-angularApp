@@ -6,7 +6,7 @@ angular
 
 angular
     .module('costs')
-    .config(function($stateProvider, $urlRouterProvider) {
+    .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
 	$urlRouterProvider.otherwise("/");
 
@@ -14,16 +14,24 @@ angular
 	.state('category', {
 		url: "/",
 		templateUrl: "views/category.html",
-		controller: categoriesController
+		controller: 'categoriesController',
+		controllerAs: '$ctrl'
     })
     .state('category-detail', {
 		url: "/detail/{categoryId}",
 		templateUrl: "views/category-detail.html",
-		controller: categoryDetailController
+		controller: 'categoryDetailController',
+		controllerAs: '$ctrl',
+		resolve: {
+			categoryTotal: function() {
+				return true
+			}
+		}
     })
     .state('costs-plan', {
 		url: "/planning",
 		templateUrl: "views/costs-plan.html",
-		controller: planController
+		controller: 'planController',
+		controllerAs: '$ctrl'
     })
 });

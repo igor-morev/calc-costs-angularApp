@@ -1,39 +1,37 @@
 <div class="heading-panel">
   <h2>Планирование бюджета</h2>
-  <h3>Месячный бюджет <span>{{defaultCosts[0].CURRENT_VALUE}} из</span> <span>{{defaultCosts[0].DEFAULT_VALUE}} руб.</span>
+  <h3>Месячный бюджет <span>{{$ctrl.defaultCosts[0].CURRENT_VALUE}} из</span> <span>{{$ctrl.defaultCosts[0].DEFAULT_VALUE}} руб.</span>
     </h3>
     <div class="t-L"><a href="/" class="btn btn-default">Вернуться к списку категорий <span class="glyphicon glyphicon-arrow-left"></span></a></div>
 </div>
 <div>
-  <form class="m-b-3 default-cost-form" ng-submit="setDefaultCost()">
+  <form class="m-b-3 default-cost-form" ng-submit="$ctrl.setDefaultCost()">
     <div class="row">
       <div class="col-sm-8 col-sm-offset-2">
         <p>Рассчитайте ваш бюджет на определённый срок.</p>
         <div class="row">
           <div class="col-sm-8 form-group">
             <label for="max-cost">Максимальный бюджет</label>
-            <input type="number" value="{{defaultCosts[0].DEFAULT_VALUE}}" class="form-control" id="max-cost" ng-model="DEFAULT_VALUE" placeholder="30 000 руб." required>
+            <input type="text" ng-bind="{{$ctrl.defaultCosts[0].DEFAULT_VALUE}}" class="form-control" id="max-cost" ng-model="$ctrl.defaultCosts[0].DEFAULT_VALUE" placeholder="Введите сумму" required>
           </div>
           <div class="form-group col-sm-4">
             <button type="submit" class="btn btn-primary">Сохранить</button>
           </div>
         </div>
-        {{defaultMessage}}
+        {{$ctrl.defaultMessage}}
       </div>
     </div>
   </form>
   <hr class="m-b-3">
-  <form class="categories-cost-form m-b-5" ng-submit="setCategoriesCost()">
-    <p>Также рассчитайте бюджет для ваших категорий.</p>
-    <div class="row">
-      <div class="col-sm-3 form-group" ng-repeat="category in categories">
-        <label for="max-cost">{{category.name}}</label>
-        <input type="number" value="{{category.MAX_VALUE}}" ng-model="catList.MAX_VALUES[$index]" class="form-control" id="max-cost" placeholder="30 000 руб." required>
-      </div>
+  <p>Также рассчитайте бюджет для ваших категорий.</p>
+  <p>{{$ctrl.categoriesMessage}}</p>
+  <form class="categories-cost-form col-sm-3 " ng-submit="$ctrl.setCategoryCost(category)" ng-repeat="category in $ctrl.categories">
+    <div class="form-group">
+      <label for="max-cost">{{category.name}}</label>
+      <input type="text" value="{{category.MAX_VALUE}}" ng-model="category.MAX_VALUE" class="form-control" id="max-cost" placeholder="30 000 руб." required>
     </div>
     <div class="form-group t-C">
-      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <button type="submit" class="btn btn-success">Сохранить</button>
     </div>
-    {{categoriesMessage}}
   </form>
 </div>

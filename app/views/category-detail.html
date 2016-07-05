@@ -1,7 +1,7 @@
 <div class="row heading-panel">
   <div class="col-sm-9">
-    <h2>{{CATEGORY.name}}</h2>
-    <h3>Месячный бюджет <span>{{CATEGORY.CURRENT_VALUE = getTotal()}} из {{CATEGORY.MAX_VALUE}} руб.</span>
+    <h2>{{$ctrl.CATEGORY.name}}</h2>
+    <h3>Месячный бюджет <span>{{$ctrl.CATEGORY.CURRENT_VALUE = $ctrl.getTotal()}} из {{$ctrl.CATEGORY.MAX_VALUE}} руб.</span>
     </h3>
     <div class="t-L"><a href="/" class="btn btn-default">Вернуться к списку категорий <span class="glyphicon glyphicon-arrow-left"></span></a></div>
   </div>
@@ -9,14 +9,14 @@
     <div class="t-R"><a ui-sref="costs-plan" class="btn btn-default">План бюджета <span class="glyphicon glyphicon-cog"></span></a></div>
   </div>
 </div>
-<div ng-if="results.length == 0">Для данной категории расходов нет.</div>
+<div ng-if="$ctrl.resources == 0">Для данной категории расходов нет.</div>
 <div class="categories row">
-	<div class="col-sm-3 item" ng-repeat="resource in resources | filter: {catId : categoryId} as results">
+	<div class="col-sm-3 item" ng-repeat="resource in $ctrl.resources">
 	  <div class="inner">
 	    <h4>{{resource.name}}</h4>
 	    <p>{{resource.PRICE}} руб.</p>
 	    <a class="btn btn-primary m-b-1">Редактировать</a>
-	    <button ng-click="deleteResource(resource)" class="btn btn-danger">Удалить</a>
+	    <button ng-click="$ctrl.deleteResource(resource)" class="btn btn-danger">Удалить</a>
 	  </div>
 	</div>
 </div>
@@ -32,17 +32,17 @@
         <h4 class="modal-title">Добавить новый ресурс</h4>
       </div>
       <div class="modal-body">
-        <form ng-submit="addResource()">
+        <form ng-submit="$ctrl.addResource()">
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Название" ng-model="name" required>
+            <input type="text" class="form-control" placeholder="Название" ng-model="$ctrl.name" required>
           </div>
           <div class="form-group">
-            <input type="number" class="form-control" placeholder="100 руб." ng-model="PRICE" required>
+            <input type="number" class="form-control" placeholder="100 руб." ng-model="$ctrl.PRICE" required>
           </div>
           <div class="form-group">
             <button type="submit" class="btn btn-primary">Отправить</button>
           </div>
-          {{defaultMessage}}
+          {{$ctrl.defaultMessage}}
         </form>
       </div>
     </div>

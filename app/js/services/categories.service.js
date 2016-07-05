@@ -1,47 +1,32 @@
 angular
     .module('costs')
-    .service('categories', categories);
+    .service('Categories', Categories);
 
-function categories() {
-	var obj = {
-		categories: [
-			{
-				"id": 1,
-				"name": "Питание",
-				"CURRENT_VALUE": 0,
-				"MAX_VALUE": 0
-			},
-			{
-				"id": 2,
-				"name": "Транспорт",
-				"CURRENT_VALUE": 0,
-				"MAX_VALUE": 0
-			},
-			{
-				"id": 3,
-				"name": "Проживание",
-				"CURRENT_VALUE": 0,
-				"MAX_VALUE": 0
-			},
-			{
-				"id": 4,
-				"name": "Развлечения",
-				"CURRENT_VALUE": 0,
-				"MAX_VALUE": 0
-			}
-		]
+function Categories($http) {
+	var vm = this;
+
+	vm.getCategories = function() {
+		return $http({
+			method: "GET",
+			url: "http://s2.localhost/api/categories"
+		})
 	}
 
-	var defaultObj = {
-		defaultCosts: [
-			{
-				"userId": 1,
-				"id": 1,
-				"CURRENT_VALUE": 0,
-				"DEFAULT_VALUE": 35000
-			}
-		]
+
+	vm.getDefault = function() {
+		return $http({
+			method: "GET",
+			url: "http://s2.localhost/api/default"
+		})
 	}
 
-	return [obj, defaultObj];
+	vm.updateMaxValue = function(data) {
+		return $http({
+			method: "POST",
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+			data: data,
+			url: "http://s2.localhost/api/categories"
+		})
+	}
+
 }
