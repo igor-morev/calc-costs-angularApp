@@ -28,10 +28,10 @@ function categoryDetailController($stateParams, Resources, Categories) {
 	vm.categoryId = $stateParams.categoryId;
 	vm.resources = [];
 
-	getResources();
+	getResources($stateParams.categoryId);
 
-	function getResources() {
-		vm._Resources.getResources()
+	function getResources(catId) {
+		vm._Resources.getResources(catId)
 		.then(
 			successData,
 			errorData
@@ -79,7 +79,6 @@ function categoryDetailController($stateParams, Resources, Categories) {
 			);
 
 		function successData(response) {
-			console.log(response);
 			vm.resources.splice(index, 1);
 		}
 
@@ -88,23 +87,9 @@ function categoryDetailController($stateParams, Resources, Categories) {
 		}
 	}
 
-	vm.getTotal = function() {
-		var sum = 0;
-		for (var i = 0; i < vm.resources.length; i++) {
-			var item = vm.resources[i];
-
-			if (item.catId == vm.categoryId) {
-				sum += +item.PRICE;
-			}
-			continue;
-
-		}
-		return sum;
-	}
-
 	vm.addResource = function() {
-		var remain = vm.CATEGORY.MAX_VALUE - vm.getTotal(),
-			newSum = vm.getTotal() + vm.PRICE;
+		var remain = vm.CATEGORY.MAX_VALUE - vm._Resources.sumResources(vm.resources),
+			newSum = vm._Resources.sumResources(vm.resources) + vm.PRICE;
 		if (newSum > vm.CATEGORY.MAX_VALUE) {
 			vm.showDefaultMessage("Вашего бюджета недостаточно. Вы можете потратить не более "+ remain + " руб.");
 			return;
@@ -124,7 +109,10 @@ function categoryDetailController($stateParams, Resources, Categories) {
 
 		function successData(response) {
 			if (response.data) {
-				getResources();
+				vm.showDefaultMessage(vm.name +" успешно добавлен.");
+				vm.name = "";
+				vm.PRICE = "";
+				getResources($stateParams.categoryId);
 			}
 		}
 
@@ -132,9 +120,6 @@ function categoryDetailController($stateParams, Resources, Categories) {
 			console.log(response);
 		}
 
-		vm.showDefaultMessage(vm.name +" успешно добавлен.");
-		vm.name = "";
-		vm.PRICE = "";
 	}
 
 }

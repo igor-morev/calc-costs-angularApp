@@ -11,22 +11,17 @@ angular
 	$urlRouterProvider.otherwise("/");
 
 	$stateProvider
-	.state('category', {
+	.state('categories', {
 		url: "/",
-		templateUrl: "views/category.html",
+		templateUrl: "views/categories.html",
 		controller: 'categoriesController',
 		controllerAs: '$ctrl'
     })
-    .state('category-detail', {
+    .state('category', {
 		url: "/detail/{categoryId}",
 		templateUrl: "views/category-detail.html",
 		controller: 'categoryDetailController',
-		controllerAs: '$ctrl',
-		resolve: {
-			categoryTotal: function() {
-				return true
-			}
-		}
+		controllerAs: '$ctrl'
     })
     .state('costs-plan', {
 		url: "/planning",

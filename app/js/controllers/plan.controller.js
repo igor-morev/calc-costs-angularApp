@@ -9,14 +9,14 @@ function planController(Categories) {
 
 	vm.categories = [];
 	vm.defaultCosts = [{
-		id: "",
+		id: 1,
 		CURRENT_VALUE: 0,
 		DEFAULT_VALUE: 0
 	}];
 
 	getCategories();
 
-	function getCategories() {
+	function getCategories(value) {
 		vm._Categories.getCategories()
 		.then(
 			successData, 
@@ -59,39 +59,38 @@ function planController(Categories) {
 		vm.categoriesMessage = message;
 	}
 
-	function sumCategoriesMax() {
-		var sum = 0;
-
-		vm.categories.forEach(function(item, i) {
-			sum += +item.MAX_VALUE;
-		});
-
-		return sum;
-	}
-
 	vm.setDefaultCost = function() {
-		var sum = 0;
-
-		vm.categories.forEach(function(item, i) {
-			sum += item.MAX_VALUE;
-		});
-
-		if (vm.DEFAULT_VALUE == vm.defaultCosts[0].DEFAULT_VALUE) {
-			vm.showDefaultMessage("Ваш бюджет не изменился.");
-			return;
-		}
-
-		if (vm.DEFAULT_VALUE < sum) {
-			vm.showDefaultMessage("Уменьшите бюджет для ваших категорий.");
+		if (vm.defaultCosts[0].DEFAULT_VALUE < vm._Categories.sumCategoriesMax(vm.categories)) {
+			vm.showDefaultMessage("Уменьшите бюджет ваших категорий. Данные не были сохранены.");
 			return;		
 		}
 
-		vm.defaultCosts[0].DEFAULT_VALUE = vm.DEFAULT_VALUE;
-		vm.showDefaultMessage("Бюджет успешно сохранён.");
+		var data = {
+			id: 1,
+			DEFAULT_VALUE: vm.defaultCosts[0].DEFAULT_VALUE
+		}
+
+		vm._Categories.updateDefault(data)
+			.then(
+				successData,
+				errorData
+			);
+
+		function successData(response) {
+			if (response.data) {
+				vm.showDefaultMessage("Максимальный бюджет установлен.");
+				getDefault();
+			}
+		}
+
+		function errorData(response) {
+			console.log(response);
+		}
 	}
 
 	vm.setCategoryCost = function(category) {
-		if (sumCategoriesMax() > vm.defaultCosts[0].DEFAULT_VALUE) {
+		if (vm._Categories.sumCategoriesMax(vm.categories) > vm.defaultCosts[0].DEFAULT_VALUE) {
+			getCategories();
 			vm.showCategoriesMessage("Вы превысили максимальный бюджет, откорректируйте введённые значения и попробуйте сохранить ещё раз.");
 			return;
 		}
@@ -109,9 +108,8 @@ function planController(Categories) {
 
 		function successData(response) {
 			if (response.data) {
-				console.log(response);
 				vm.showCategoriesMessage("Бюджет для ваших категорий установлен.");
-				getCategories();
+				getCategories("set");
 			}
 		}
 

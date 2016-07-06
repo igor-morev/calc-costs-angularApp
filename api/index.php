@@ -9,7 +9,7 @@
 	header('HTTP/1.1 200 OK', true);
 
 
-	Macaw::get('/categories', function() {
+	Macaw::get('/categories/', function() {
 		require_once('db.php');
 
 		$query = "SELECT * FROM categories ORDER BY id ASC";
@@ -110,7 +110,7 @@
 	});
 
 
-	Macaw::get('/default', function() {
+	Macaw::get('/default/', function() {
 		require_once('db.php');
 
 		$query = "SELECT * FROM defaultcosts ORDER BY id ASC";
@@ -130,6 +130,29 @@
 		}
 
 		$mysqli->close();
+	});
+
+
+	Macaw::post('/default', function() {
+		require_once('db.php');
+
+		header("Content-type: text/txt; charset=UTF-8");
+		$data = json_decode(file_get_contents("php://input"));
+
+		$DEFAULT_VALUE = $data->DEFAULT_VALUE;
+
+		$query = "UPDATE defaultcosts 
+			SET DEFAULT_VALUE = '$DEFAULT_VALUE' WHERE id = 1";
+
+			$result = $mysqli->query($query);
+
+			if (!$result) {
+				die($mysqli->error);
+			}
+
+			echo json_encode($data, JSON_UNESCAPED_UNICODE);
+
+			$mysqli->close();
 	});
 
 

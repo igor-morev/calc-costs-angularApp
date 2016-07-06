@@ -1,7 +1,7 @@
 <div class="row heading-panel">
   <div class="col-sm-9">
     <h2>Категории</h2>
-    <h3>Месячный бюджет <span>{{$ctrl.defaultCosts[0].CURRENT_VALUE}} из</span> <span>{{$ctrl.defaultCosts[0].DEFAULT_VALUE}} руб.</span>
+    <h3>Месячный бюджет <span>{{$ctrl._Categories.sumCategoriesMax($ctrl.categories)}} из</span> <span>{{$ctrl.defaultCosts[0].DEFAULT_VALUE}} руб.</span>
     </h3>
   </div>
   <div class="col-sm-3">
@@ -12,8 +12,8 @@
 	<div class="col-sm-3 item" ng-repeat="category in $ctrl.categories">
 	  <div class="inner">
 	    <h4>{{category.name}}</h4>
-	    <p><span class="js-current">{{$ctrl._Categories.TOTAL}}</span> из <span class="js-max-value">{{category.MAX_VALUE}}</span> руб.</p>
-	    <a ui-sref="category-detail({categoryId: category.id})" class="btn btn-primary">Подробнее</a>
+	    <p><span class="js-current">0</span> из <span class="js-max-value">{{category.MAX_VALUE}}</span> руб.</p>
+	    <a ui-sref="category({categoryId: category.id})" class="btn btn-primary">Подробнее</a>
 	  </div>
 	</div>
 </div>

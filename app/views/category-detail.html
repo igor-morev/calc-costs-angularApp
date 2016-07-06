@@ -1,7 +1,7 @@
 <div class="row heading-panel">
   <div class="col-sm-9">
     <h2>{{$ctrl.CATEGORY.name}}</h2>
-    <h3>Месячный бюджет <span>{{$ctrl.CATEGORY.CURRENT_VALUE = $ctrl.getTotal()}} из {{$ctrl.CATEGORY.MAX_VALUE}} руб.</span>
+    <h3>Месячный бюджет <span>{{$ctrl._Resources.sumResources($ctrl.resources)}} из {{$ctrl.CATEGORY.MAX_VALUE}} руб.</span>
     </h3>
     <div class="t-L"><a href="/" class="btn btn-default">Вернуться к списку категорий <span class="glyphicon glyphicon-arrow-left"></span></a></div>
   </div>
