@@ -27,6 +27,27 @@
 		}
 	});
 
+
+	Macaw::get('/resources/', function() {
+		require_once('db.php');
+
+		$query = "SELECT * FROM resources ORDER BY resId ASC";
+
+		if ($result = $mysqli->query($query)) {
+		    $arResult = array();
+
+		    while ($row = $result->fetch_assoc()) {
+		        array_push($arResult, $row);
+		    }
+
+		    echo json_encode($arResult, JSON_UNESCAPED_UNICODE);
+
+		    $result->free_result();
+		}
+
+		$mysqli->close();
+	});
+
 	Macaw::get('/resources/(:any)/', function($catId) {
 		require_once('db.php');
 

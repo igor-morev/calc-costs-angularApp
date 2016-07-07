@@ -12,11 +12,11 @@
 	<div class="col-sm-3 item" ng-repeat="category in $ctrl.categories">
 	  <div class="inner">
 	    <h4>{{category.name}}</h4>
-	    <p><span class="js-current">0</span> из <span class="js-max-value">{{category.MAX_VALUE}}</span> руб.</p>
+	    <p><span class="js-current">{{$ctrl._Categories.sumResourcesCatId($ctrl.resources, category.id)}}</span> из <span class="js-max-value">{{category.MAX_VALUE}}</span> руб.</p>
 	    <a ui-sref="category({categoryId: category.id})" class="btn btn-primary">Подробнее</a>
 	  </div>
 	</div>
 </div>
-<div class="t-C m-b-5">
+<!--<div class="t-C m-b-5">
   <a href="#" class="btn btn-success">Добавить категорию <span class="glyphicon glyphicon-plus"></span></a>
-</div>
+</div>-->

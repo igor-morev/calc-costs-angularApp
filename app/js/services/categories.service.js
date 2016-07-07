@@ -12,6 +12,13 @@ function Categories($http) {
 		})
 	}
 
+	vm.getAllResources = function(catId) {
+		return $http({
+			method: "GET",
+			url: "http://s2.localhost/api/resources/" 
+		})
+	}
+
 
 	vm.updateMaxValue = function(data) {
 		return $http({
@@ -43,6 +50,19 @@ function Categories($http) {
 
 		categories.forEach(function(item, i) {
 			sum += +item.MAX_VALUE;
+		});
+
+		return sum;
+	}
+
+
+	vm.sumResourcesCatId = function (resources, catId) {
+		var sum = 0;
+
+		resources.forEach(function(item, i) {
+			if (item.catId === catId) {
+				sum += +item.PRICE;
+			};
 		});
 
 		return sum;

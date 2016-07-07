@@ -3,7 +3,7 @@ angular
     .service('Resources', Resources);
 
 
-function Resources($http) {
+function Resources($http, $state) {
 	var vm = this;
 
 	vm.getResources = function(catId) {

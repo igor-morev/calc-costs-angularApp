@@ -8,6 +8,7 @@ function categoriesController(Categories, $http) {
 
 	vm.categories = [];
 	vm.defaultCosts = [];
+	vm.resources = [];
 
 	setCategories();
 
@@ -38,6 +39,25 @@ function categoriesController(Categories, $http) {
 
 		function successData(response) {
 			vm.defaultCosts = response.data;
+		}
+
+		function errorData(response) {
+			console.log(response);
+		}
+	}
+
+
+	getAllResources();
+
+	function getAllResources() {
+		vm._Categories.getAllResources()
+		.then(
+			successData,
+			errorData
+		);
+
+		function successData(response) {
+			vm.resources = response.data;
 		}
 
 		function errorData(response) {
